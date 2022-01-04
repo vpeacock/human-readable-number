@@ -1,46 +1,75 @@
-const arrNumbersUpTo19 = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-const dozens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const NumbersUpTo19 = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+    "seventeen",
+    "eighteen",
+    "nineteen",
+];
+const dozens = [
+    "",
+    "",
+    "twenty",
+    "thirty",
+    "forty",
+    "fifty",
+    "sixty",
+    "seventy",
+    "eighty",
+    "ninety",
+];
 
+module.exports = function toReadable(number) {
+  let numLength = (number + '').length;
+  let hundred;
+  let dozen;
+  let unit;
 
-const findNumberUpTo19 = (number) => {
- return arrNumbersUpTo19[number];
-}
-
-const findDozensUnits = (number) => {
-  let tmp = number + '';
-  let dozenСhar = tmp.slice(0, 1);
-  let unitChar = tmp.slice(1);
-
-  if(unitChar === '0'){
-    return dozens[dozenСhar];
-  }else{
-    return dozens[dozenСhar] + ' ' + arrNumbersUpTo19[unitChar];;
-  }  
-}
-
-module.exports = function toReadable (number) {
-  if (number <= 19) {
-    return findNumberUpTo19(number);
+  if (number >= 0 && number <= 19) {
+    return NumbersUpTo19[number];
   }
 
   if (number >= 20 && number <= 99) {
-    return findDozensUnits(number);
-  }
-
-  if (number >= 100 && number <= 999) {
-    let tmp = number + '';
-    let hundredСhar = +tmp[0];
-    let dozenСhar = +tmp.slice(1, 3)
-
-    if (dozenСhar === 0){
-      return findNumberUpTo19(hundredСhar) + ' hundred';
-    }else if (dozenСhar < 20) {
-      return findNumberUpTo19(hundredСhar) + ' hundred '+ findNumberUpTo19(dozenСhar);
-    } else if(dozenСhar >= 20)  {
-      return findNumberUpTo19(hundredСhar) + ' hundred '+ findDozensUnits(dozenСhar);
+    dozen = +(number + '')[0];
+    unit = +(number + '')[1];
+    if (unit === 0) {
+      return `${dozens[dozen]}`;
+    } else {
+      return `${dozens[dozen]} ${NumbersUpTo19[unit]}`;
     }
   }
+
+  if (numLength === 3 && number >= 100 && number <= 999) {
+    let checkNum = +(number + '').slice(1);
+
+   
+    hundred = +(number + '')[0];
+    dozen = +(number + '')[1];
+    unit = +(number + '')[2];
+    if (dozen === 0 && unit === 0) {
+        return `${NumbersUpTo19[hundred]} hundred`;
+      }else if (unit === 0 && checkNum > 19) {
+        return `${NumbersUpTo19[hundred]} hundred ${dozens[dozen]}`;
+      } else if (dozen >= 0 && checkNum < 20) {
+
+        return `${NumbersUpTo19[hundred]} hundred ${NumbersUpTo19[checkNum]}`;
+      }  else if (dozen >= 0 && checkNum > 19) {
+        return `${NumbersUpTo19[hundred]} hundred ${dozens[dozen]} ${NumbersUpTo19[unit]}`
+      }
+
+  }
 }
-
-
-
